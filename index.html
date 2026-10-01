@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cars Catalog</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <h1>Cars Catalog</h1>
+        <button id="add-car-btn" class="add-car-btn" type="button">
+          Додати авто
+        </button>
+      </header>
+
+      <main class="content">
+        <div
+          id="error-banner"
+          class="error-banner hidden"
+          role="alert"
+          aria-live="assertive"
+        ></div>
+
+        <section class="filters-panel">
+          <form id="filters-form" class="filters-form">
+            <label>
+              <span>Тип кузова</span>
+              <select name="body_type">
+                <option value="">Всі</option>
+                <option value="sedan">sedan</option>
+                <option value="crossover">crossover</option>
+                <option value="hatchback">hatchback</option>
+                <option value="wagon">wagon</option>
+                <option value="coupe">coupe</option>
+                <option value="convertible">convertible</option>
+                <option value="minivan">minivan</option>
+                <option value="pickup">pickup</option>
+                <option value="suv">suv</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Рік</span>
+              <input
+                type="number"
+                name="year"
+                min="1900"
+                step="1"
+                placeholder="Напр. 2022"
+              />
+            </label>
+
+            <label>
+              <span>марка</span>
+              <input type="text" name="seller_name" placeholder="bmw" />
+            </label>
+
+            <label>
+              <span>Доступність</span>
+              <select name="is_available">
+                <option value="">Усі</option>
+                <option value="true">Доступне</option>
+                <option value="false">Не доступне</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Мін rating</span>
+              <input
+                type="number"
+                name="min_rating"
+                min="0"
+                max="5"
+                step="1"
+                placeholder="5"
+              />
+            </label>
+
+            <button type="submit" class="apply-btn">Застосувати</button>
+          </form>
+        </section>
+
+        <section class="cars-section" aria-live="polite">
+          <div id="loading" class="state">Завантаження...</div>
+          <div id="empty" class="state hidden">Машин поки немає</div>
+          <div id="cars-list" class="cars-list"></div>
+        </section>
+
+        <div class="pagination" aria-label="Pagination">
+          <button id="prev-page" type="button" class="page-btn">Назад</button>
+          <span id="page-info">Сторінка 1</span>
+          <button id="next-page" type="button" class="page-btn">Далі</button>
+        </div>
+      </main>
+    </div>
+
+    <div id="create-car-modal" class="modal hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal="true"></div>
+      <div
+        class="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-car-title"
+      >
+        <div class="modal-header">
+          <h2 id="create-car-title">Додати авто</h2>
+          <button
+            type="button"
+            id="close-modal-btn"
+            class="close-modal-btn"
+            aria-label="Закрити"
+          >
+            ×
+          </button>
+        </div>
+
+        <form id="create-car-form" class="create-car-form" novalidate>
+          <div class="form-field">
+            <label for="model">Модель</label>
+            <input id="model" name="model" type="text" maxlength="1000" />
+            <small class="field-error" data-error-for="model"></small>
+          </div>
+
+          <div class="form-field">
+            <label for="seller_name">ПІБ продавця</label>
+            <input
+              id="seller_name"
+              name="seller_name"
+              type="text"
+              maxlength="500"
+            />
+            <small class="field-error" data-error-for="seller_name"></small>
+          </div>
+
+          <div class="form-field">
+            <label for="vin">VIN</label>
+            <input id="vin" name="vin" type="text" maxlength="17" />
+            <small class="field-error" data-error-for="vin"></small>
+          </div>
+
+          <div class="form-field">
+            <label for="body_type">Тип кузова</label>
+            <select id="body_type" name="body_type">
+              <option value="">Оберіть тип</option>
+              <option value="sedan">sedan</option>
+              <option value="crossover">crossover</option>
+              <option value="hatchback">hatchback</option>
+              <option value="wagon">wagon</option>
+              <option value="coupe">coupe</option>
+              <option value="convertible">convertible</option>
+              <option value="minivan">minivan</option>
+              <option value="pickup">pickup</option>
+              <option value="suv">suv</option>
+            </select>
+            <small class="field-error" data-error-for="body_type"></small>
+          </div>
+
+          <div class="form-field">
+            <label for="engine_volume">Об'єм двигуна</label>
+            <input
+              id="engine_volume"
+              name="engine_volume"
+              type="number"
+              min="0"
+              step="0.1"
+            />
+            <small class="field-error" data-error-for="engine_volume"></small>
+          </div>
+
+          <div class="form-field">
+            <label for="price">Ціна</label>
+            <input id="price" name="price" type="number" min="0" step="0.01" />
+            <small class="field-error" data-error-for="price"></small>
+          </div>
+
+          <div class="form-field">
+            <label for="rating">Рейтинг</label>
+            <input
+              id="rating"
+              name="rating"
+              type="number"
+              min="0"
+              max="5"
+              step="1"
+            />
+            <small class="field-error" data-error-for="rating"></small>
+          </div>
+
+          <div class="form-field">
+            <label for="is_available">Доступність</label>
+            <select id="is_available" name="is_available">
+              <option value="true">Доступне</option>
+              <option value="false">Не доступне</option>
+            </select>
+            <small class="field-error" data-error-for="is_available"></small>
+          </div>
+
+          <div class="form-field form-field-full">
+            <label for="description">Опис</label>
+            <textarea
+              id="description"
+              name="description"
+              maxlength="5000"
+              rows="4"
+            ></textarea>
+            <small class="field-error" data-error-for="description"></small>
+          </div>
+
+          <div class="form-field">
+            <label for="year">Рік</label>
+            <input id="year" name="year" type="number" min="1900" step="1" />
+            <small class="field-error" data-error-for="year"></small>
+          </div>
+
+          <div class="form-field form-field-full">
+            <label for="tags">Теги</label>
+            <input
+              id="tags"
+              name="tags"
+              type="text"
+              placeholder="Напр.: luxury, suv, gas"
+            />
+            <small class="field-error" data-error-for="tags"></small>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="cancel-create-btn" class="secondary-btn">
+              Скасувати
+            </button>
+            <button type="submit" class="primary-btn">Створити</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
